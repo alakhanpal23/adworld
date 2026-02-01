@@ -1,0 +1,5 @@
+{
+  "name": "AdWorld: Scenario Normalizer",
+  "description": "A professional tool for founders and marketers to convert messy, unstructured campaign ideas into structured, simulation-ready Scenario JSON objects using Gemini AI.",
+  "requestFramePermissions": []
+}
