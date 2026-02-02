@@ -1,5 +1,8 @@
 {
-  "name": "AdWorld: Scenario Normalizer",
-  "description": "A professional tool for founders and marketers to convert messy, unstructured campaign ideas into structured, simulation-ready Scenario JSON objects using Gemini AI.",
-  "requestFramePermissions": []
+  "name": "AdWorld: Decision Surface",
+  "description": "A decision simulator for advertising using AI-generated consumers and Veo 3.1 video synthesis.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
 }

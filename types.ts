@@ -6,6 +6,21 @@ export type IntentLevel = "discovery" | "consideration" | "high_intent";
 export type PrimaryChannel = "tiktok" | "instagram" | "youtube" | "search";
 export type Objective = "purchases" | "leads" | "signups";
 export type CreativeFormat = "video" | "image" | "text";
+export type ConfidenceLevel = "HIGH" | "MEDIUM" | "LOW" | "EXPLORATORY";
+export type StabilityStatus = "STABLE" | "VOLATILE" | "FRAGILE";
+
+export interface PValues {
+  p10: number;
+  p50: number;
+  p90: number;
+}
+
+export interface TraitDistribution {
+  mean: number;
+  variance: number;
+  confidence: ConfidenceLevel;
+  source: string;
+}
 
 export interface Scenario {
   product: {
@@ -60,18 +75,20 @@ export interface Segment {
 export interface Consumer {
   id: string;
   segment: string;
+  representativeness_bucket: "core" | "edge" | "exploratory";
+  agent_confidence_score: number;
   demographics: {
     age: number;
     income_band: IncomeBand;
     geo: string;
   };
   traits: {
-    price_sensitivity: number;
-    trust_baseline: number;
-    attention: number;
-    novelty_seeking: number;
-    needs_match: number;
-    fatigue_rate: number;
+    price_sensitivity: TraitDistribution;
+    trust_baseline: TraitDistribution;
+    attention: TraitDistribution;
+    novelty_seeking: TraitDistribution;
+    needs_match: TraitDistribution;
+    fatigue_rate: TraitDistribution;
   };
   channel_affinity: {
     tiktok: number;
@@ -106,6 +123,7 @@ export interface Consumer {
 export interface Market {
   segments: Segment[];
   consumers: Consumer[];
+  market_confidence_score: number;
   assumptions: string[];
 }
 
@@ -115,19 +133,24 @@ export interface MarketGeneratorResponse {
 
 export interface BetaDistribution {
   dist: "beta";
-  alpha: number;
-  beta: number;
+  parameters: { alpha: number; beta: number };
+  p10: number;
+  p50: number;
+  p90: number;
 }
 
 export interface LogNormalDistribution {
   dist: "lognormal";
-  mu: number;
-  sigma: number;
+  parameters: { mu: number; sigma: number };
+  p10: number;
+  p50: number;
+  p90: number;
   currency: string;
 }
 
 export interface Priors {
   channel: PrimaryChannel;
+  prior_strength: "weak" | "medium" | "anchored";
   distributions: {
     ctr: BetaDistribution;
     cvr: BetaDistribution;
@@ -211,44 +234,53 @@ export interface SimulationSummary {
   cac: number;
   roas: number;
   success: boolean;
+  ssi: number; // Simulation Stability Index
+  stability: StabilityStatus;
 }
 
 export interface SimulationResult {
   days: DailyMetric[];
   summary: SimulationSummary;
-}
-
-export interface PostMortem {
-  verdict: "success" | "failure" | "marginal";
-  executive_summary: string;
-  key_findings: string[];
-  risks: string[];
-  recommendations: string[];
-}
-
-export interface MetricPValues {
-  p10: number;
-  p50: number;
-  p90: number;
+  iterations?: SimulationSummary[]; // Multiple runs to calculate intervals
 }
 
 export interface DecisionBrief {
   headline: string;
   key_metrics: {
-    cac: MetricPValues;
-    conversions: MetricPValues;
-    ctr: MetricPValues;
-    cvr: MetricPValues;
+    cac: PValues;
+    conversions: PValues;
+    ctr: PValues;
+    cvr: PValues;
   };
   verdict: {
     go_no_go: "go" | "no_go" | "test_more";
     reason: string;
   };
+  confidence_level: ConfidenceLevel;
+  ssi: number;
+  stability: StabilityStatus;
   primary_failure_mode: "price" | "creative" | "channel" | "trust" | "targeting";
+  fragility_disclosure: string;
   drivers: Array<{
     name: string;
     impact: "high" | "med" | "low";
     evidence: string;
+  }>;
+  sentiment_analysis: Array<{
+    sentiment: string;
+    percentage: number;
+    common_feedback: string;
+    persona: string;
+  }>;
+  segment_breakdown: Array<{
+    name: string;
+    cvr_relative: "above" | "below" | "avg";
+    potential: string;
+  }>;
+  confidence_matrix: Array<{
+    component: string;
+    confidence: ConfidenceLevel;
+    reason: string;
   }>;
   next_experiments_ranked: Array<{
     name: string;
@@ -256,39 +288,16 @@ export interface DecisionBrief {
     expected_uplift: "high" | "med" | "low";
     confidence: "high" | "med" | "low";
   }>;
-  one_slide_summary: [string, string, string, string, string, string];
+  one_slide_summary: string[];
 }
 
 export interface DecisionBriefResponse {
   brief: DecisionBrief;
 }
 
-export interface SystemAudit {
-  overall_status: "pass" | "warning" | "fail";
-  demo_readiness: "ready" | "risky" | "not_ready";
-  summary: string;
-  phase_checks: {
-    phase_1_scenario: { status: "pass" | "fail"; issues: string[] };
-    phase_2_market: { status: "pass" | "fail"; issues: string[] };
-    phase_3_priors: { status: "pass" | "fail"; issues: string[] };
-    phase_4_plan: { status: "pass" | "fail"; issues: string[] };
-    phase_5_results: { status: "pass" | "fail"; issues: string[] };
-  };
-  critical_risks: string[];
-  recommended_fixes: Array<{
-    priority: "high" | "medium" | "low";
-    fix: string;
-  }>;
-}
-
-export interface SystemAuditResponse {
-  audit: SystemAudit;
-}
-
 export interface SelfTestReport {
   status: "pass" | "warning" | "fail";
   integrity_score: number;
-  // Fix: added summary property to match usage in App.tsx
   summary: string;
   demo_readiness: "ready" | "risky" | "not_ready";
   phase: {

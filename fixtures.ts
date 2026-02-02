@@ -1,6 +1,13 @@
 
 import { Scenario, Market, Priors, DecisionBrief, ExperimentPlan } from './types';
 
+const defaultTrait = (val: number) => ({
+  mean: val,
+  variance: 0.05,
+  confidence: "MEDIUM" as const,
+  source: "synthetic_inference"
+});
+
 export const GOLDEN_SCENARIOS: Record<string, Scenario> = {
   cyberpet: {
     product: {
@@ -29,48 +36,28 @@ export const GOLDEN_SCENARIOS: Record<string, Scenario> = {
     },
     constraints: { target_cac_usd: 45.00, notes: "3x ROAS target" },
     assumptions: ["Standard social CTR"]
-  },
-  neobank: {
-    product: {
-      name: "Zenith Bank",
-      category: "FinTech",
-      one_liner: "High-yield savings for Gen Z creators.",
-      differentiator: "Automated tax withholding for 1099 income.",
-      landing_page_quality: "medium"
-    },
-    pricing: { price_usd: 0, billing: "monthly" },
-    audience: {
-      geo: ["USA", "UK"],
-      age_range: [18, 28],
-      income_band: "mid",
-      intent_level: "high_intent",
-      persona_notes: "Freelance designers and influencers."
-    },
-    channel: { primary: "tiktok", objective: "signups", budget_usd: 10000, duration_days: 14 },
-    creative: {
-      format: "video",
-      hook: "Stop stressing about tax season.",
-      value_prop: "4.5% APY + Auto-Tax.",
-      cta: "Open Account",
-      visual_description: "Fast-paced editing of phone app.",
-      trust_signals: ["FDIC Insured"]
-    },
-    constraints: { target_cac_usd: 25.00, notes: "Focus on signup volume." },
-    assumptions: ["High TikTok engagement."]
   }
 };
 
 export const GOLDEN_MARKET: Market = {
   segments: [
     { name: "Urban Techies", share: 0.4, description: "Early adopters in major cities." },
-    { name: "Guilty Parents", share: 0.35, description: "Feel bad about long work hours." },
-    { name: "Vet-Led Leads", share: 0.25, description: "Driven by professional recommendations." }
+    { name: "Guilty Parents", share: 0.35, description: "Feel bad about long work hours." }
   ],
   consumers: Array.from({ length: 400 }).map((_, i) => ({
     id: `agent-${i}`,
-    segment: i < 160 ? "Urban Techies" : i < 300 ? "Guilty Parents" : "Vet-Led Leads",
+    segment: i < 160 ? "Urban Techies" : "Guilty Parents",
+    representativeness_bucket: "core",
+    agent_confidence_score: 0.85,
     demographics: { age: 30, income_band: "high", geo: "USA" },
-    traits: { price_sensitivity: 0.3, trust_baseline: 0.5, attention: 0.8, novelty_seeking: 0.7, needs_match: 0.6, fatigue_rate: 0.1 },
+    traits: {
+      price_sensitivity: defaultTrait(0.3),
+      trust_baseline: defaultTrait(0.5),
+      attention: defaultTrait(0.8),
+      novelty_seeking: defaultTrait(0.7),
+      needs_match: defaultTrait(0.6),
+      fatigue_rate: defaultTrait(0.1)
+    },
     channel_affinity: { tiktok: 0.4, instagram: 0.9, youtube: 0.3, search: 0.2 },
     thresholds: { max_price_usd: 200, min_trust: 0.4 },
     decision_model: {
@@ -79,16 +66,18 @@ export const GOLDEN_MARKET: Market = {
     },
     narrative: { buy_reason: "Automation helps guilt.", no_buy_reason: "Too expensive." }
   })),
+  market_confidence_score: 0.78,
   assumptions: ["Market behaves according to CyberPet baseline."]
 };
 
 export const GOLDEN_PRIORS: Priors = {
   channel: "instagram",
+  prior_strength: "medium",
   distributions: {
-    ctr: { dist: "beta", alpha: 2, beta: 80 },
-    cvr: { dist: "beta", alpha: 5, beta: 95 },
-    cpc: { dist: "lognormal", mu: 0.1, sigma: 0.2, currency: "USD" },
-    impression_to_view: { dist: "beta", alpha: 50, beta: 50 }
+    ctr: { dist: "beta", parameters: { alpha: 2, beta: 80 }, p10: 0.012, p50: 0.024, p90: 0.041 },
+    cvr: { dist: "beta", parameters: { alpha: 5, beta: 95 }, p10: 0.025, p50: 0.049, p90: 0.078 },
+    cpc: { dist: "lognormal", parameters: { mu: 0.1, sigma: 0.2 }, p10: 0.85, p50: 1.12, p90: 1.45, currency: "USD" },
+    impression_to_view: { dist: "beta", parameters: { alpha: 50, beta: 50 }, p10: 0.4, p50: 0.5, p90: 0.6 }
   },
   modifiers: {
     hook_match: { type: "linear", slope: 0.1, clamp: [0.8, 1.2] },
@@ -106,8 +95,7 @@ export const GOLDEN_PLAN: ExperimentPlan = {
   n_runs: 5,
   experiments: [
     { name: "base", hypothesis: "Baseline performance.", overrides: {}, expected_direction: "better" },
-    { name: "high_trust", hypothesis: "Boosting trust signals increases CVR.", overrides: { trust_multiplier: 1.2 }, expected_direction: "better" },
-    { name: "lower_price", hypothesis: "Lower price point ($129) increases volume.", overrides: { price_multiplier: 0.86 }, expected_direction: "uncertain" }
+    { name: "high_trust", hypothesis: "Boosting trust signals increases CVR.", overrides: { trust_multiplier: 1.2 }, expected_direction: "better" }
   ],
   metrics: ["cac", "roas", "conversions"],
   allocation: { strategy: "even", test_fraction: 1.0 },
@@ -115,7 +103,7 @@ export const GOLDEN_PLAN: ExperimentPlan = {
   assumptions: ["Standard experimental allocation."]
 };
 
-export const GOLDEN_BRIEF: Partial<DecisionBrief> = {
+export const GOLDEN_BRIEF: DecisionBrief = {
   headline: "CyberPet Pro: High Efficiency Discovery, Scale with Creative Variance",
   key_metrics: {
     cac: { p10: 38.2, p50: 42.1, p90: 48.4 },
@@ -125,23 +113,39 @@ export const GOLDEN_BRIEF: Partial<DecisionBrief> = {
   },
   verdict: {
     go_no_go: "go",
-    reason: "Unit economics are robust. Projected CAC ($42.10) is 6.5% below target with strong return on capital."
+    reason: "Unit economics are robust. Projected CAC ($42.10) is below target with stable variance."
   },
+  confidence_level: "HIGH",
+  ssi: 0.88,
+  stability: "STABLE",
   primary_failure_mode: "creative",
+  fragility_disclosure: "Conclusion is sensitive to the assumed high intent of urban pet parents.",
   drivers: [
-    { name: "Trust Signals", impact: "high", evidence: "Vet recommendation boosted CVR by 12% in sim." },
-    { name: "Price Fit", impact: "med", evidence: "High income segment showed low sensitivity to $149 price point." }
+    { name: "Trust Signals", impact: "high", evidence: "Vet recommendation boosted CVR significantly." }
+  ],
+  sentiment_analysis: [
+    { sentiment: "Enthusiastic", percentage: 65, common_feedback: "The automated play feature is a game-changer for my long shifts.", persona: "Busy Urban Professionals" },
+    { sentiment: "Skeptical", percentage: 20, common_feedback: "Not sure if the computer vision is really accurate enough for my reactive cat.", persona: "Edge Case Tech Adopters" },
+    { sentiment: "Price Sensitive", percentage: 15, common_feedback: "Love the idea but $149 is hard to justify when standard toys are $10.", persona: "Frugal Pet Owners" }
+  ],
+  segment_breakdown: [
+    { name: "Urban Techies", cvr_relative: "above", potential: "High scale potential via high CPC tolerance." },
+    { name: "Guilty Parents", cvr_relative: "avg", potential: "Steady growth, sensitive to creative fatigue." },
+    { name: "Elderly Care", cvr_relative: "below", potential: "Low affinity, requires different trust hooks." }
+  ],
+  confidence_matrix: [
+    { component: "Agent Personas", confidence: "MEDIUM", reason: "Synthetic psychographics" },
+    { component: "Price Fit", confidence: "HIGH", reason: "Logistic response stable" }
   ],
   next_experiments_ranked: [
-    { name: "TikTok Expansion", why: "Test lower CPC channel with same creative hook.", expected_uplift: "med", confidence: "high" },
-    { name: "Price Elasticity", why: "Test $179 price point to increase LTV.", expected_uplift: "high", confidence: "low" }
+    { name: "TikTok Expansion", why: "Test lower CPC channel.", expected_uplift: "med", confidence: "high" }
   ],
   one_slide_summary: [
-    "CAC is well within target threshold of $45.",
+    "CAC is within target threshold of $45.",
+    "Outcome stable in 88% of simulated worlds.",
     "Instagram shows strong affinity for high-income pet parents.",
     "Main risk: Creative fatigue after Day 14.",
     "Trust signals are the primary conversion driver.",
-    "P90 scenario still maintains marginal profitability.",
-    "Scale budget by 20% if Day 7 CVR holds > 4%."
+    "Scale budget by 20% if Day 7 CVR holds."
   ]
 };
