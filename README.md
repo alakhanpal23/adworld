@@ -1,8 +1,14 @@
 # AdWorld
 
+[Watch the demo](https://youtu.be/QAL1TaGUDLU)
+
 AdWorld is an interactive advertising decision simulator. It turns a campaign idea into a synthetic market, generates an experiment plan, runs simulated outcomes, and assembles a decision brief. A built-in demo uses fixed scenarios so you can explore the flow without an API key.
 
 This is a prototype for exploring decisions, not a source of measured customer behavior or a substitute for a live experiment. Treat generated audiences, forecasts, and recommendations as hypotheses.
+
+![AdWorld system diagram: a campaign idea flows through scenario normalization, synthetic market and experiment generation, local simulation, and a decision brief](docs/system-design.svg)
+
+*Demo fixtures provide fixed scenarios; optional AI-assisted mode uses Gemini. The simulation engine runs locally in the app.*
 
 ## Run locally
 

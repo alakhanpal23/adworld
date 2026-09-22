@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+<title id="title">AdWorld — system diagram</title>
+<desc id="desc">A campaign idea is normalized, used to generate a synthetic market and experiment plan, simulated locally, and compiled into a decision brief.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 9 4.5 L 0 9" fill="none" stroke="#465768" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="640" fill="#ffffff"/>
+<text x="40" y="52" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#172b3a">AdWorld — system diagram</text>
+<path d="M 40 69 H 1160" stroke="#d5dce2" stroke-width="1"/>
+<rect x="40" y="235" width="180" height="90" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="130.0" y="277.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Campaign idea</text>
+<text x="130.0" y="302.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">user input</text>
+<rect x="260" y="120" width="900" height="410" fill="#f8fafb" stroke="#9aaab5" stroke-width="1.5" stroke-dasharray="7 5"/>
+<rect x="274" y="110" width="225" height="22" fill="#ffffff"/>
+<text x="282" y="126" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#33485a">AdWorld React application</text>
+<rect x="285" y="235" width="165" height="90" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="367.5" y="277.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Scenario</text>
+<text x="367.5" y="302.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">normalize input</text>
+<rect x="495" y="235" width="165" height="90" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="577.5" y="277.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Generators</text>
+<text x="577.5" y="302.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">market · priors · plan</text>
+<rect x="705" y="235" width="165" height="90" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="787.5" y="277.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Simulation</text>
+<text x="787.5" y="302.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">local engine</text>
+<rect x="915" y="235" width="210" height="90" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="1020.0" y="277.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Decision brief</text>
+<text x="1020.0" y="302.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">hypotheses + next tests</text>
+<path d="M 220 280 L 285 280" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="285,280 274.0,285.0 274.0,275.0" fill="#465768"/>
+<path d="M 450 280 L 495 280" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="495,280 484.0,285.0 484.0,275.0" fill="#465768"/>
+<path d="M 660 280 L 705 280" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="705,280 694.0,285.0 694.0,275.0" fill="#465768"/>
+<path d="M 870 280 L 915 280" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="915,280 904.0,285.0 904.0,275.0" fill="#465768"/>
+<rect x="430" y="395" width="160" height="70" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="510.0" y="427.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Demo fixtures</text>
+<text x="510.0" y="452.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">fixed scenarios</text>
+<rect x="625" y="395" width="160" height="70" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="705.0" y="427.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Gemini API</text>
+<text x="705.0" y="452.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">optional live mode</text>
+<path d="M 510 395 L 510 355 L 577 355 L 577 325" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="577,325 582.0,336.0 572.0,336.0" fill="#465768"/>
+<path d="M 705 395 L 705 355 L 627 355 L 627 325" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="627,325 632.0,336.0 622.0,336.0" fill="#465768"/>
+<rect x="915" y="395" width="210" height="70" fill="#ffffff" stroke="#465768" stroke-width="1.7"/>
+<text x="1020.0" y="427.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#172b3a">Creative output</text>
+<text x="1020.0" y="452.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">optional Veo step</text>
+<path d="M 1020 325 L 1020 395" fill="none" stroke="#465768" stroke-width="1.8"/>
+<polygon points="1020,395 1015.0,384.0 1025.0,384.0" fill="#465768"/>
+<text x="40" y="565" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#536777">Simulated outcomes are hypotheses, not observed customer behavior.</text>
+</svg>
