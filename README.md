@@ -1,20 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# AdWorld
 
-# Run and deploy your AI Studio app
+AdWorld is an interactive advertising decision simulator. It turns a campaign idea into a synthetic market, generates an experiment plan, runs simulated outcomes, and assembles a decision brief. A built-in demo uses fixed scenarios so you can explore the flow without an API key.
 
-This contains everything you need to run your app locally.
+This is a prototype for exploring decisions, not a source of measured customer behavior or a substitute for a live experiment. Treat generated audiences, forecasts, and recommendations as hypotheses.
 
-View your app in AI Studio: https://ai.studio/apps/drive/13a1zEwKWmGu4sOGIpZtVm9iq76NEzRri
+## Run locally
 
-## Run Locally
+Requires Node.js and npm.
 
-**Prerequisites:**  Node.js
+```bash
+npm install
+npm run dev
+```
 
+Open the local URL printed by Vite. The demo mode works without credentials.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## AI-assisted mode
+
+The current Vite configuration injects `GEMINI_API_KEY` into the client bundle. Browser code and bundled values are visible to visitors, so **do not use a private or production key** with a public deployment. Move Gemini calls behind a server endpoint before enabling AI-assisted mode for other users.
+
+## Project map
+
+- `App.tsx` — the eight-phase interface and workflow.
+- `geminiService.ts` — Gemini-backed generation.
+- `simulationEngine.ts` — local simulation logic.
+- `fixtures.ts` — fixed demo scenarios and outputs.
+- `types.ts` — shared domain types.
+
+## Build
+
+```bash
+npm run build
+```
